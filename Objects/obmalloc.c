@@ -794,6 +794,8 @@ PyObject_Malloc(size_t nbytes)
     poolp next;
     uint size;
 
+    goto redirect; /* Force always using malloc */
+
 #ifdef WITH_VALGRIND
     if (UNLIKELY(running_on_valgrind == -1))
         running_on_valgrind = RUNNING_ON_VALGRIND;
@@ -1003,6 +1005,7 @@ PyObject_Free(void *p)
 
     if (p == NULL)      /* free(NULL) has no effect */
         return;
+    goto redirect; /* Force always free() */
 
 #ifdef WITH_VALGRIND
     if (UNLIKELY(running_on_valgrind > 0))
